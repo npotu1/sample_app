@@ -40,4 +40,16 @@ describe "Micropost pages" do
       end
     end
   end
+  describe "micropost pagination" do
+    before { visit root_path }
+    before(:all) { 30.times { FactoryGirl.create(:micropost)} }
+    after(:all) {Micropost.delete_all }
+    it {should have_content("Micropost Feed") }
+    it {should have_selector('div.pagination') }
+    it "should list each post" do
+    Micropost.paginate(page:1).each do |microposts|
+    page.should have_selector("li##{item.id}", text: item.content)
+        end
+      end
+  end
 end
