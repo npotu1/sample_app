@@ -177,7 +177,14 @@ describe "with a password that's too short" do
 
     it { should be_following(other_user) }
     its(:followed_users) { should include(other_user) }
-
+it "should destroy associated relationships" do
+relationships = @user.relationships.to_a
+ @user.destroy
+ relationships.should_not be_empty
+ relationships.each do |relationship|
+ expect(Relationship.where(id: relationship.id)).to be_empty
+ end
+ end
     describe "followed user" do
       subject { other_user }
       its(:followers) { should include(@user) }
